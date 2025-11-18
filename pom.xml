@@ -8,4 +8,22 @@
     <artifactId>lib-version</artifactId>
     <version>1.0.0</version>
 
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+    </properties>
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/doda25-team18/lib-version.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/${project.scm.developerConnection}</url>
+        </repository>
+    </distributionManagement>
+
 </project>
