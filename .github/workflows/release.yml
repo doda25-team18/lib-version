@@ -10,6 +10,10 @@ jobs:
     name: Build and Release
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: 1. Checkout repository
         uses: actions/checkout@v4
