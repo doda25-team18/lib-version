@@ -13,10 +13,6 @@
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
 
-    <scm>
-        <developerConnection>scm:git:https://github.com/doda25-team18/lib-version.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
 
     <distributionManagement>
         <repository>
