@@ -7,7 +7,7 @@
 
     <groupId>doda25-team18</groupId>
     <artifactId>lib-version</artifactId>
-    <version>1.0.0</version> 
+    <version>${project.version}</version>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
@@ -28,14 +28,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-versions-plugin</artifactId>
-                <version>3.2.0</version> 
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>set</goal>
                         </goals>
                         <configuration>
-                            <newVersion>${env.VERSION}</newVersion> 
+                            <newVersion>${env.VERSION}</newVersion>  <!-- De versie wordt dynamisch ingesteld door GitHub Actions -->
                         </configuration>
                     </execution>
                 </executions>
