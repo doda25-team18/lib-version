@@ -7,7 +7,7 @@
 
     <groupId>doda25-team18</groupId>
     <artifactId>lib-version</artifactId>
-    <version>${project.version}</version>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
