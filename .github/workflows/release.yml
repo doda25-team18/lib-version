@@ -1,5 +1,4 @@
 name: Release lib-version
-
 on:
   push:
     tags:
