@@ -1,0 +1,46 @@
+name: Pre-release from Branches
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths: 'pom.xml'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  pre-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+      # This snippet was generated with AI assistance based on my requirements
+      - name: Generate pre-release version
+        run: |
+          # Extract branch name
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          # Sanitize branch name
+          BRANCH_NAME_SANITIZED=$(echo "$BRANCH_NAME" | sed 's/[^a-zA-Z0-9.-]/-/g')
+          # Timestamp
+          TIMESTAMP=$(date +"%y%m%d-%H%M%S")
+          # Read version from pom.xml metadata
+          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          BASE_VERSION=$(echo $CURRENT_VERSION | sed 's/-SNAPSHOT//')
+          # Build pre-release version
+          PRE_VERSION="${BASE_VERSION}-${BRANCH_NAME_SANITIZED}-${TIMESTAMP}"
+          echo "PRE_VERSION=$PRE_VERSION" >> $GITHUB_ENV
+          echo "Pre-release version: $PRE_VERSION"
+
+      - name: Build and deploy pre-release
+        run: mvn deploy -DskipTests -Drevision=$PRE_VERSION
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
