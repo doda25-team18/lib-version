@@ -25,7 +25,29 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
 
+      - name: Remove snapshot suffix
+        run: mvn versions:set -DremoveSnapshot=true -DgenerateBackupPoms=false
+
+      - name: Get release version
+        run: RELEASE=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+
+      - name: Commit stable version
+        run: |
+          git add pom.xml
+          git commit -m "Github Workflow: stable release"
+          git tag "v$RELEASE"
+          git push origin main
+
       - name: Build and deploy
         run: mvn deploy -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Bump to next snapshot version
+        run: mvn versions:set -DnextSnapshot=true -DgenerateBackupPoms=false
+
+      - name: Commit next snapshot version
+        run: |
+          git add pom.xml
+          git commit -m "Github Workflow: bump to next snapshot version"
+          git push origin main
