@@ -1,15 +1,9 @@
 name: Library Release
 
-on:
-  push:
-    branches: main
-    paths: 'pom.xml'
-  pull_request:
-    branches: main
-    paths: 'pom.xml'
+on: workflow_dispatch
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
@@ -25,7 +19,39 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
 
+      - name: Remove snapshot suffix
+        run: mvn versions:set -DremoveSnapshot=true -DgenerateBackupPoms=false
+
+# This step was AI-generated
+      - name: Get release version
+        run: |
+          RELEASE=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "RELEASE=$RELEASE" >> $GITHUB_ENV
+
+          
+# source: https://github.com/actions/checkout/README.md
+      - name: Set git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit stable version
+        run: |
+          git add pom.xml
+          git commit -m "Github Workflow: stable release ${{ env.RELEASE }}"
+          git tag "v${{ env.RELEASE }}"
+          git push origin "v${{ env.RELEASE }}"
+
       - name: Build and deploy
         run: mvn deploy -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Bump to next snapshot version
+        run: mvn versions:set -DnextSnapshot=true -DgenerateBackupPoms=false
+
+      - name: Commit next snapshot version
+        run: |
+          git add pom.xml
+          git commit -m "Github Workflow: bump to next snapshot version"
+          git push
