@@ -22,11 +22,14 @@ jobs:
       - name: Remove snapshot suffix
         run: mvn versions:set -DremoveSnapshot=true -DgenerateBackupPoms=false
 
+# This snippet was AI-generated
       - name: Get release version
         run: |
           RELEASE=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "RELEASE=$RELEASE" >> $GITHUB_ENV
 
+          
+# source: https://github.com/actions/checkout/README.md
       - name: Set git identity
         run: |
           git config user.name "github-actions[bot]"
