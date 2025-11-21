@@ -1,13 +1,6 @@
 name: Library Release
 
-on:
-  workflow_dispatch:
-  push:
-    branches: main
-    paths: 'pom.xml'
-  pull_request:
-    branches: main
-    paths: 'pom.xml'
+on: workflow_dispatch
 
 permissions:
   contents: write
@@ -30,7 +23,9 @@ jobs:
         run: mvn versions:set -DremoveSnapshot=true -DgenerateBackupPoms=false
 
       - name: Get release version
-        run: RELEASE=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        run: |
+          RELEASE=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "RELEASE=$RELEASE" >> $GITHUB_ENV
 
       - name: Set git identity
         run: |
@@ -40,9 +35,9 @@ jobs:
       - name: Commit stable version
         run: |
           git add pom.xml
-          git commit -m "Github Workflow: stable release"
-          git tag "v$RELEASE"
-          git push
+          git commit -m "Github Workflow: stable release ${{ env.RELEASE }}"
+          git tag "v${{ env.RELEASE }}"
+          git push origin "v${{ env.RELEASE }}"
 
       - name: Build and deploy
         run: mvn deploy -DskipTests
