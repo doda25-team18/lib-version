@@ -42,7 +42,7 @@ jobs:
           git add pom.xml
           git commit -m "Github Workflow: stable release"
           git tag "v$RELEASE"
-          git push origin main
+          git push
 
       - name: Build and deploy
         run: mvn deploy -DskipTests
@@ -56,4 +56,4 @@ jobs:
         run: |
           git add pom.xml
           git commit -m "Github Workflow: bump to next snapshot version"
-          git push origin main
+          git push
