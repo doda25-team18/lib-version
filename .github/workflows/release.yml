@@ -22,7 +22,7 @@ jobs:
       - name: Remove snapshot suffix
         run: mvn versions:set -DremoveSnapshot=true -DgenerateBackupPoms=false
 
-# This snippet was AI-generated
+# This step was AI-generated
       - name: Get release version
         run: |
           RELEASE=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
